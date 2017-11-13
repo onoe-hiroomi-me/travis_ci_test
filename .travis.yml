@@ -1,5 +1,5 @@
 language: perl
 perl:
-- 5.22
+- 5.10
 script:
 - perl t/test.pl
