@@ -1,8 +1,12 @@
-dist: trusty
-sudo: required
 language: perl
 perl:
   - "5.22"
+
+services:
+  - redis-server
+
+env:
+  - PREPAN_ENV=travis
 
 before_install:
   - cpanm Carton
