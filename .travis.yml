@@ -1,5 +1,42 @@
+dist: trusty
+sudo: required
 language: perl
 perl:
-- 5.10
+  - "5.22"
+
+addons:
+  postgresql: "9.5"
+
+before_install:
+  - echo 'Asia/Tokyo' | sudo tee /etc/timezone
+  - sudo dpkg-reconfigure --frontend noninteractive tzdata
+  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
+  - travis_retry sudo apt-get update && travis_retry sudo apt-get --reinstall install -qq language-pack-ja
+  - sudo locale-gen ja_JP.UTF-8
+  - sudo update-locale LANG=ja_JP.UTF-8
+  - export LANG=ja_JP.UTF-8
+  - export LC_ALL=ja_JP.UTF-8
+  - travis_retry sudo curl -L http://toolbelt.treasuredata.com/sh/install-ubuntu-precise-td-agent2.sh | sh
+  - travis_retry sudo /usr/sbin/td-agent-gem install fluent-plugin-bigquery-patched-retry-insert-502 -v 0.4.0 --no-ri --no-rdoc
+  - cpanm -n Carton
+  - travis_retry nvm install v0.12.7
+  - nvm use v0.12.7
+  - nvm alias default v0.12.7
+  - travis_retry sudo apt-get install -y shellcheck
+  - travis_retry sudo apt-get install -y libperl-dev
+  - travis_retry sudo apt-get install -y tree
+  # install twemproxy
+  - sudo add-apt-repository -y ppa:twemproxy/stable
+  - travis_retry sudo apt-get update
+  - travis_retry sudo apt-get -y install twemproxy
+  # install mysql 5.6
+  - sudo cp /etc/mysql/my.cnf /usr/share/mysql/my-default.cnf
+
+install:
+  - travis_retry carton install --without develop
+  - travis_retry npm install -g grunt-cli
+  - travis_retry npm install
+  - travis_retry npm --prefix ./ui install ./ui
+
 script:
-- perl t/test.pl
+  - perl t/test.pl
