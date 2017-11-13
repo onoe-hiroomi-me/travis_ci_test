@@ -5,8 +5,5 @@ perl:
 before_install:
   - cpanm Carton
 
-install:
-  - carton install
-
 script:
   - perl t/test.pl
