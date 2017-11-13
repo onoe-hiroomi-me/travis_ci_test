@@ -32,11 +32,5 @@ before_install:
   # install mysql 5.6
   - sudo cp /etc/mysql/my.cnf /usr/share/mysql/my-default.cnf
 
-install:
-  - travis_retry carton install --without develop
-  - travis_retry npm install -g grunt-cli
-  - travis_retry npm install
-  - travis_retry npm --prefix ./ui install ./ui
-
 script:
   - perl t/test.pl
