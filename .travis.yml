@@ -1,12 +1,7 @@
 language: perl
+
 perl:
   - "5.22"
-
-before_install:
-  - cpanm Carton
-
-install:
-  - carton install
 
 script:
   - perl t/test.pl
